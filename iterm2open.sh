@@ -42,9 +42,9 @@ openWith () {
 
     if [ "$isText" == "1" ]; then
         if [ -z "$LINE" ]; then
-            /usr/local/Cellar/macvim/7.4-76/bin/mvim --remote-tab-silent "$FULLFILE" +"$LINE"
+            /usr/local/Cellar/macvim/7.4-76/bin/mvim "$FULLFILE" +"$LINE"
         else
-            /usr/local/Cellar/macvim/7.4-76/bin/mvim --remote-tab-silent "$FULLFILE"
+            /usr/local/Cellar/macvim/7.4-76/bin/mvim "$FULLFILE"
         fi
     else
         open "$FULLFILE"
