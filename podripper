@@ -1,0 +1,26 @@
+#/bin/python
+
+import click
+import xerox
+import time
+
+
+@click.command()
+@click.option('--base_url', help='podcast base url')
+@click.option('--start', default=0, help='iteration startpoint')
+@click.option('--end', default=100, help='iteration endpoint')
+@click.option('--suffix', default=".mp3", help='url suffix after iteration')
+@click.option('--zerofill', default=0, help='amount of zeros for iteration')
+def clipboard_copy(base_url, start, end, suffix, zerofill):
+    """
+    create a set of url combinations assembled by a base url, a iterator and a suffix (e.g. http://my.podcast.com/episode/042.mp3) and send each generated url to the clipboard (this is when jdownloader becomes handy
+    """
+    for i in range(start, end + 1):
+        url = base_url + str(i).zfill(zerofill) + suffix
+        print "sending: {}".format(url)
+        xerox.copy(url)
+        time.sleep(0.5)
+
+
+if __name__ == "__main__":
+    clipboard_copy()
