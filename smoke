@@ -4,17 +4,10 @@
 from datetime import datetime
 
 
-# d_last = datetime(year=2015, month=5, day=10, hour=2)
-# d_last = datetime(year=2015, month=8, day=9, hour=3)
-# d_last = datetime(year=2015, month=10, day=2, hour=17)
-# d_last = datetime(year=2015, month=12, day=28, hour=1)
-# d_last = datetime(year=2016, month=1, day=31, hour=0)
-d_last = datetime(year=2016, month=2, day=7, hour=0)
+d_last = datetime(year=2016, month=5, day=27, hour=1)
 
 d_now = datetime.now()
-
 delta = d_now - d_last
-
 seconds = float(delta.total_seconds())
 minutes = seconds / 60.0
 
@@ -28,8 +21,22 @@ cigarettes_per_minute = cigarettes_per_hour / 60
 minute_price = cigarettes_per_minute * price_per_cigarette
 euros = minutes * minute_price
 cigarettes = minutes * cigarettes_per_minute
+smoke_time = cigarettes * 5 / 60
 
-print d_last.strftime("last cigarette: %A, %d. %B %Y %H:%S")
-print "smoke-free since %s" % delta
-print "%10.2f € saved" % euros
-print "%i cigarettes saved" % cigarettes
+rem = int(cigarettes)
+i = 1
+while rem > 0:
+    if rem > int(cigarettes_per_day):
+        print "day %5s " % i + "🚬 " * int(cigarettes_per_day)
+        rem = rem - int(cigarettes_per_day)
+    else:
+        print "day %5s " % i + "🚬 " * rem
+        rem = 0
+    i = i + 1
+
+print "\nlast cigarette:"
+print d_last.strftime("📅  %A, %d. %B %Y %H:%S")
+print "⌛  %s" % delta
+print "💰  %0.2f € saved" % euros
+print "🚬  %i cigarettes saved" % cigarettes
+print "🕒  %0.2f hours gained" % smoke_time
