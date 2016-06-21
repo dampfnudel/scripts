@@ -1,0 +1,24 @@
+.TH EDIFF 1L "30 December 1988"
+.SH NAME
+ediff \- translate diff output into plain English
+.SH SYNOPSIS
+.B ediff
+.SH DESCRIPTION
+.I Ediff
+is a filter which translates normal
+.IR diff (1)
+output (not output produced with the
+.BR \-c ,
+.BR \-e ,
+or
+.B \-f
+.I diff
+options) into more readable English descriptions.
+It copies non-diff material verbatim.
+.SH "SEE ALSO"
+comm(1), diff(1), uniq(1)
+.SH AUTHOR
+.nf
+David MacKenzie (edf@rocky2.rockefeller.edu).
+Manual page written with the help of R. P. C. Rodgers
+(rodgers@maxwell.mmwb.ucsf.edu).
