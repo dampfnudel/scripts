@@ -4,7 +4,10 @@
 from datetime import datetime
 
 
-d_last = datetime(year=2016, month=5, day=27, hour=1)
+# d_last = datetime(year=2016, month=5, day=27, hour=1)
+# d_last = datetime(year=2016, month=7, day=24, hour=2)
+# d_last = datetime(year=2016, month=9, day=27, hour=23)
+d_last = datetime(year=2016, month=10, day=23, hour=3)
 
 d_now = datetime.now()
 delta = d_now - d_last

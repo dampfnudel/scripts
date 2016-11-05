@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+dirs=~/Workspace/gists/*
+for dir in $dirs; do
+    if [[ -d $dir ]]; then
+        (cd "$dir" && git add -A && git commit -a --allow-empty-message -m "" && git push)
+    fi
+done

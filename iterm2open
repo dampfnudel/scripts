@@ -1,24 +1,70 @@
-#!/bin/bash
+#!/bin/zsh
 
 # open textfiles with "mvim --remote-tab-silent {file} +{linenumber}". Open other files with "open"
 
-FULLFILE="$1"
-LINE="$2"
+# FULLFILE="$1"
+# LINE="$2"
+#
+# FILENAME=$(basename "$FULLFILE")
+# EXTENSION="${FILENAME##*.}"
+#
+# openWith () {
+#     if [[ $(file $FULLFILE |awk '{print $NF}') == 'text' ]]; then
+#         if [ -z "$LINE" ]; then
+#             /usr/local/Cellar/macvim/7.4-99/bin/mvim --remote-tab-silent "$FULLFILE" +"$LINE"
+#         else
+#             /usr/local/Cellar/macvim/7.4-99/bin/mvim --remote-tab-silent "$FULLFILE"
+#         fi
+#     else
+#         open "$FULLFILE"
+#     fi
+# }
+#
+#
+# openWith "$EXTENSION"
+smart_open () {
+    # escape spaces
+    local filename cmd cmd_dir cmd_text cmd_arbitrary
+    filename=${(q)1}
 
-FILENAME=$(basename "$FULLFILE")
-EXTENSION="${FILENAME##*.}"
+    cmd=""
+    cmd_dir="cd $filename"
+    cmd_text="${EDITOR_TAB} $filename"
+    cmd_arbitrary="open $filename"
 
-openWith () {
-    if [[ $(file $FULLFILE |awk '{print $NF}') == 'text' ]]; then
-        if [ -z "$LINE" ]; then
-            /usr/local/Cellar/macvim/7.4-99/bin/mvim --remote-tab-silent "$FULLFILE" +"$LINE"
-        else
-            /usr/local/Cellar/macvim/7.4-99/bin/mvim --remote-tab-silent "$FULLFILE"
-        fi
+    # if directory
+    if [[ -d "$filename" ]]; then
+        cmd=$cmd_dir
     else
-        open "$FULLFILE"
+        # special case handling
+        local file_extension file_exceptions
+        file_extension="${filename##*.}"
+        file_exceptions=(csv org)
+        for i in "${file_exceptions[@]}"
+        do
+            if [[ "$i" == "$file_extension" ]]; then
+                cmd=$cmd_arbitrary
+            fi
+        done
+
+        # skip if it was special case
+        if [[ "$cmd" == "" ]]; then
+            # if meta information is text
+            if [[ $(file "$filename" | awk '{print $NF}') == 'text' ]]; then
+                cmd=$cmd_text
+            else
+                # fallback
+                cmd=$cmd_arbitrary
+            fi
+        fi
+    fi
+
+    if [[ $cmd != '' ]]; then
+        echo $filename
+        eval ${cmd}
+    else
+        echo "nothing to do here"
     fi
 }
 
-
-openWith "$EXTENSION"
+smart_open "$1"

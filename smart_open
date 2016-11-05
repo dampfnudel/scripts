@@ -1,0 +1,4 @@
+#!/bin/sh
+local EDITOR='/usr/local/Cellar/macvim/8.0-110/bin/mvim'
+local EDITOR_TAB=${EDITOR}' --remote-tab-silent'
+$EDITOR_TAB "$1"
