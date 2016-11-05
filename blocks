@@ -13,6 +13,7 @@ That’s what you wake up with every day.
 """
 
 from datetime import datetime
+from sys import argv
 
 
 class Matrix(object):
@@ -37,7 +38,7 @@ class Block(object):
     offset = '  '
     hour_glass_symbol = '⌛  '    # hour glass
 
-    def __init__(self, today_end):
+    def __init__(self, today_end, theme='emoji'):
         self.today_end = today_end
         self.today_now = datetime.now()
         self.delta = self.today_end - self.today_now
@@ -46,23 +47,27 @@ class Block(object):
         self.remaining_blocks = int(self.minutes / 10)
 
         self.block_symbol = '⬜  '    # white block
-        self.consumed_block_symbol = '💀  '    # skull
-        self.remaining_block_symbol = '🙂  '    # smiling face
-        self.current_block_symbol = '😎  '    # sunglass face
-        # consumed_block_symbol = '⬛  '    # black block
-        # remaining_block_symbol = '⬜  '    # white block
-        # current_block_symbol = '❌  '    # red cross
+
+        if theme == 'block':
+            self.consumed_block_symbol = '⬛  '    # black block
+            self.remaining_block_symbol = '⬜  '    # white block
+            self.current_block_symbol = '⭕  '    # red circle
+        elif theme == 'circle':
+            self.consumed_block_symbol = '⚫  '    # full black circle
+            self.remaining_block_symbol = '⚪  '    # full white circle
+            self.current_block_symbol = '🔴  '    # full red circle
+        else:    # theme == 'emoji':
+            self.consumed_block_symbol = '💀  '    # skull
+            self.remaining_block_symbol = '🙂  '    # smiling face
+            self.current_block_symbol = '😎  '    # sunglass face
+        # self.current_block_symbol = '❌  '    # red cross
         # current_block_symbol = '⬇️  '    # block-down
-        # current_block_symbol = '⭕  '    # red circle
         # current_block_symbol = '🔳  '    # white square button
         # current_block_symbol = '🔲  '    # black square button
         # current_block_symbol = '🔶  '    # orange diamond
         # current_block_symbol = '🔷  '    # blue diamond
         # current_block_symbol = '🔻  '    # red triangle down
         # current_block_symbol = '🅾️  '    # o-block
-        # current_block_symbol = '🔴  '    # full red circle
-        # consumed_block_symbol = '⚫  '    # full black circle
-        # remaining_block_symbol = '⚪  '    # full white circle
         self.matrix = Matrix(self.remaining_blocks)
         self.fill_matrix()
 
@@ -94,5 +99,8 @@ class Block(object):
 if __name__ == "__main__":
     # assumption: time awake = 7-23 o'clock
     today_end = datetime.now().replace(hour=23, minute=0, second=0)
-    block = Block(today_end)
+    if len(argv) > 1:
+        block = Block(today_end, theme=str(argv[1]))
+    else:
+        block = Block(today_end)
     block.print_matrix()
