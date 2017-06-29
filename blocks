@@ -17,8 +17,8 @@ from sys import argv
 
 
 class Matrix(object):
-    column_count = 8
-    row_count = 12
+    column_count = 6
+    row_count = 16
     blocks_total = column_count * row_count
 
     def __init__(self, remaining_blocks):
@@ -82,7 +82,7 @@ class Block(object):
             self.matrix.matrix_append(self.remaining_block_symbol)
 
     def print_matrix(self):
-        print('    1  2  3  4  5  6  7  8')
+        print('    1  2  3  4  5  6')
         for i, element in enumerate(self.matrix.matrix):
             print('{:>2}{}{}'.format(i + 1, self.offset,
                                      ''.join(element)))
