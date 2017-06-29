@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+  # default colors
+  K_COLOR_DI="0;34"  # di:directory
+  K_COLOR_LN="0;35"  # ln:symlink
+  K_COLOR_SO="0;32"  # so:socket
+  K_COLOR_PI="0;33"  # pi:pipe
+  K_COLOR_EX="0;31"  # ex:executable
+  K_COLOR_BD="34;46" # bd:block special
+  K_COLOR_CD="34;43" # cd:character special
+  K_COLOR_SU="30;41" # su:executable with setuid bit set
+  K_COLOR_SG="30;46" # sg:executable with setgid bit set
+  K_COLOR_TW="30;42" # tw:directory writable to others, with sticky bit
+  K_COLOR_OW="30;43" # ow:directory writable to others, without sticky bit
+# foo
+_k_bsd_to_ansi() {
+  local foreground=$1 background=$2 foreground_ansi background_ansi
+  case $foreground in
+    a) foreground_ansi=30;;
+    b) foreground_ansi=31;;
+    c) foreground_ansi=32;;
+    d) foreground_ansi=33;;
+    e) foreground_ansi=34;;
+    f) foreground_ansi=35;;
+    g) foreground_ansi=36;;
+    h) foreground_ansi=37;;
+    x) foreground_ansi=0;;
+  esac
+  case $background in
+    a) background_ansi=40;;
+    b) background_ansi=41;;
+    c) background_ansi=42;;
+    d) background_ansi=43;;
+    e) background_ansi=44;;
+    f) background_ansi=45;;
+    g) background_ansi=46;;
+    h) background_ansi=47;;
+    x) background_ansi=0;;
+  esac
+  printf "%s;%s" $background_ansi $foreground_ansi
+}
+  if [[ $(uname) == 'Darwin' && -n $LSCOLORS ]]; then
+    # Translate OSX/BSD's LSCOLORS so we can use the same here
+    echo $(_k_bsd_to_ansi $LSCOLORS[1]  $LSCOLORS[2])
+    echo $(_k_bsd_to_ansi $LSCOLORS[3]  $LSCOLORS[4])
+    echo $(_k_bsd_to_ansi $LSCOLORS[5]  $LSCOLORS[6])
+    echo $(_k_bsd_to_ansi $LSCOLORS[7]  $LSCOLORS[8])
+    echo $(_k_bsd_to_ansi $LSCOLORS[9]  $LSCOLORS[10])
+    echo $(_k_bsd_to_ansi $LSCOLORS[11] $LSCOLORS[12])
+    echo $(_k_bsd_to_ansi $LSCOLORS[13] $LSCOLORS[14])
+    echo $(_k_bsd_to_ansi $LSCOLORS[15] $LSCOLORS[16])
+    echo $(_k_bsd_to_ansi $LSCOLORS[17] $LSCOLORS[18])
+    echo $(_k_bsd_to_ansi $LSCOLORS[19] $LSCOLORS[20])
+    echo $(_k_bsd_to_ansi $LSCOLORS[21] $LSCOLORS[22])
+  fi
