@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-initialize a git repository and add an origin
+initialize a git repository and add an origin if you define one
 '''
 import sys
 import os
@@ -11,10 +11,10 @@ import click
 
 
 @click.command()
-@click.option('--repo', help='repository name')
+@click.option('--repo', required=True, help='repository name')
 @click.option('--origin', help='origin url')
 def init(repo, origin):
-    """initialize a git repository and add an origin"""
+    '''initialize a git repository and add an origin'''
     print(repo)
     print(origin)
     mkdir(repo)
@@ -30,8 +30,9 @@ def setup_git(repo, origin):
     subprocess.call(['git', 'init'])
     subprocess.call(['git', 'add', 'README.md', '.gitignore'])
     subprocess.call(['git', 'commit', '-m', 'first commit'])
-    subprocess.call(['git', 'remote', 'add', 'origin', origin])
-    subprocess.call(['git', 'push', '-u', 'origin', 'master'])
+    if origin:
+        subprocess.call(['git', 'remote', 'add', 'origin', origin])
+        subprocess.call(['git', 'push', '-u', 'origin', 'master'])
     subprocess.call(['git', 'checkout', '-b', 'develop'])
 
 
