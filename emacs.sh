@@ -61,8 +61,8 @@ function attach() {
 }
 
 function startup_hook () {
-    echo -e "\nCalling the mothership"
-    cat /Users/mbayer/Settings/dotfiles/lambda.txt
+    echo -e "\nMx-start-hacking"
+    cat /Users/mbayer/Settings/dotfiles/ascii-art/ambda.txt
     echo ""
 }
 
