@@ -10,3 +10,6 @@
 [submodule "hackedHN"]
 	path = hackedHN
 	url = git@github.com:embayer/hackedHN.git
+[submodule "bookmarklets"]
+	path = bookmarklets
+	url = git@github.com:embayer/bookmarklets.git
