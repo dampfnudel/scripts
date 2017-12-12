@@ -52,7 +52,7 @@ def get_future_todos(ics):
                 else:
                     # UTC hack
                     hour = int(dtstart_dt.strftime('%H'))
-                    date_part = dtstart_dt.strftime('%Y-%m-%d %a {}:%M'.format(hour))
+                    date_part = dtstart_dt.strftime('%Y-%m-%d %a {}:%M'.format(hour +1))
 
                 summary = component.get('summary')
                 node = NODE_TEMPLATE.format(summary, date_part)
