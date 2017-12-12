@@ -1,0 +1,12 @@
+[submodule "shell-fit"]
+	path = shell-fit
+	url = git@github.com:embayer/shell-fit.git
+[submodule "memento-moji"]
+	path = memento-moji
+	url = git@github.com:embayer/memento-moji.git
+[submodule "org-note"]
+	path = org-note
+	url = git@github.com:embayer/org-note.git
+[submodule "hackedHN"]
+	path = hackedHN
+	url = git@github.com:embayer/hackedHN.git
