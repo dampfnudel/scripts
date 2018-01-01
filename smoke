@@ -1,23 +1,75 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+import re
+import os
 
 
-# d_last = datetime(year=2016, month=5, day=27, hour=1)
-# d_last = datetime(year=2016, month=7, day=24, hour=2)
-# d_last = datetime(year=2016, month=9, day=27, hour=23)
-d_last = datetime(year=2016, month=10, day=23, hour=3)
+class Wishlist:
+    """
+    path:
+    ~/.smoke-wishlist
+    format:
+    {price}\t{title}
+    """
+    def __init__(self, path=os.path.expanduser('~/.smoke-wishlist'), savings=0.00, minute_price=0.00):
+        self.path = path
+        self.savings = savings
+        self.minute_price = minute_price
+        self.items = self.get_wishlist(self.path)
+        # print(self.items)
+
+    def get_wishlist(self, path):
+        with open(path, 'r') as f:
+            lines = []
+            for line in f:
+                price_title = re.split(r'\t+', line.strip())
+                item = {'price': float(price_title[0]), 'title': price_title[1]}
+
+
+                prices = [l['price'] for l in lines]
+                tp = sum(prices) + item['price']
+
+                # print(type(tp))
+                item['total_price'] = tp
+                # lines[-1] = item
+                lines.append(item)
+            return lines
+
+    def print_wishlist(self):
+
+        print('\nAchievements ({} €): '.format(self.items[-1]['total_price']))
+        for i in self.items:
+            tp = i['total_price']
+            checkmark = ''
+            if tp < self.savings:
+                checkmark = '✔️'
+            else:
+                left = tp - self.savings
+                left_time = left / self.minute_price / 60 / 24
+                checkmark = 'in %0.2f days.' % left_time
+
+            print('{} ({} €) {}'.format(i['title'], i['price'], checkmark))
+
+    def __len__(self):
+        return len(self.items)
+
+    def __getitem__(self, position):
+        return self.items[position]
+
+
+d_last = datetime(year=2018, month=1, day=1, hour=19)
 
 d_now = datetime.now()
 delta = d_now - d_last
 seconds = float(delta.total_seconds())
 minutes = seconds / 60.0
 
-package_price = 6.0
+package_price = 6.5
 package_amount = 22.0
 price_per_cigarette = package_price / package_amount
-cigarettes_per_day = 18.0
+cigarettes_per_day = 16.0
 cigarettes_per_hour = cigarettes_per_day / 24
 cigarettes_per_minute = cigarettes_per_hour / 60
 
@@ -30,16 +82,19 @@ rem = int(cigarettes)
 i = 1
 while rem > 0:
     if rem > int(cigarettes_per_day):
-        print "day %5s " % i + "🚬 " * int(cigarettes_per_day)
+        print("day %5s " % i + "🚬 " * int(cigarettes_per_day))
         rem = rem - int(cigarettes_per_day)
     else:
-        print "day %5s " % i + "🚬 " * rem
+        print("day %5s " % i + "🚬 " * rem)
         rem = 0
     i = i + 1
 
-print "\nlast cigarette:"
-print d_last.strftime("📅  %A, %d. %B %Y %H:%S")
-print "⌛  %s" % delta
-print "💰  %0.2f € saved" % euros
-print "🚬  %i cigarettes saved" % cigarettes
-print "🕒  %0.2f hours gained" % smoke_time
+print("\nlast cigarette:")
+print(d_last.strftime("📅  %A, %d. %B %Y %H:%S"))
+print("⌛  %s" % delta)
+print("💰  %0.2f € saved" % euros)
+print("🚬  %i cigarettes saved" % cigarettes)
+print("🕒  %0.2f hours gained" % smoke_time)
+
+w = Wishlist(savings=euros, minute_price=minute_price)
+w.print_wishlist()
