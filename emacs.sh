@@ -62,7 +62,7 @@ function attach() {
 
 function startup_hook () {
     echo -e "\nMx-start-hacking"
-    cat /Users/mbayer/Settings/dotfiles/ascii-art/ambda.txt
+    cat ~/Settings/dotfiles/ascii-art/lambda.txt
     echo ""
 }
 
