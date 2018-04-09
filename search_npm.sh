@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+declare -a args
+declare -a packages
+declare savedev=0
+declare global=0
+
+declare -A colors
+colors[red]=$(tput setaf 1)
+colors[green]=$(tput setaf 2)
+colors[blue]=$(tput setaf 4)
+colors[reset]=$(tput sgr0)
+
+color() {
+  local color="$1"; shift
+  printf '%s' "${colors[$color]}"
+  printf '%s\n' "$@"
+  printf '%s' "${colors[reset]}"
+}
+
+err() { color red "$@" >&2; return 1; }
+
+die() {
+  (( $# > 0 )) && err "$@"
+  exit 1
+}
+
+has() {
+  local v=0
+  if [[ $1 = '-v' ]]; then
+    v=1
+    shift
+  fi
+  for c; do c="${c%% *}"
+    if ! command -v "$c" &> /dev/null; then
+      (( v > 0 )) && err "$c not found"
+      return 1
+    fi
+  done
+}
+
+select_from() {
+  local cmd='command -v'
+  for a; do
+    case "$a" in
+      -c)
+        cmd="$2"
+        shift 2
+        ;;
+    esac
+  done
+  for c; do
+    if $cmd "${c%% *}" &> /dev/null; then
+      echo "$c"
+      return 0
+    fi
+  done
+  return 1
+}
+
+has -v fzf || die
+
+npm=$(select_from npm5 npm) || die 'npm not found'
+
+printf 'searching...\r'
+search=$($npm search --json "$*") || exit
+
+search=$(jq -r '.[] | "\(.name)|\(.version)|\(.description)"' <<< "$search" | column -t -s'|')
+
+mapfile -t packages < <(fzf --inline-info --multi --ansi --reverse \
+  --bind='Ctrl-X:toggle-preview' \
+  --expect='Ctrl-g,Ctrl-d,enter' \
+  --preview-window='hidden:down' \
+  --preview="$npm -s --json view {1} | jq -C \"del(.users, .time, .versions)\"" \
+  --header='Ctrl-D saves as dev-dependency, Ctrl-G installs globally, Ctrl-X for extra info, tab to select multiple' \
+  <<< "$search" || exit 1)
+
+key="${packages[0]}"
+case "${key,,}" in
+  ctrl-d) savedev=1 ;;
+  ctrl-g) global=1 ;;
+esac
+
+mapfile -t packages < <(printf '%s\n' "${packages[@]:1}" | cut -d' ' -f1)
+
+printf "installing...\r"
+if (( ${#packages[@]} > 0 )); then
+  if (( global > 0 )); then
+    $npm install -g "${args[@]}" "${packages[@]}"
+  elif has yarn; then
+    (( savedev > 0 )) && args+=( -D )
+    yarn add "${args[@]}" "${packages[@]}"
+  else
+    if (( savedev > 0 )); then
+      args+=( -D )
+    else
+      args+=( -S )
+    fi
+    $npm i "${args[@]}" "${packages[@]}"
+  fi
+else
+  exit 1
+fi

@@ -5,6 +5,9 @@ from datetime import datetime
 import re
 import os
 
+d_last = datetime(year=2018, month=2, day=9, hour=23)
+d_last = datetime(year=2018, month=3, day=25, hour=1)
+
 
 class Wishlist:
     """
@@ -46,11 +49,13 @@ class Wishlist:
             if tp < self.savings:
                 checkmark = '✔️'
             else:
-                left = tp - self.savings
+                left = tp - self.savings - 164.5
                 left_time = left / self.minute_price / 60 / 24
                 checkmark = 'in %0.2f days.' % left_time
 
             print('{} ({} €) {}'.format(i['title'], i['price'], checkmark))
+        print('Zelda: 24.04.2018')
+        print('All: 02.06.2018')
 
     def __len__(self):
         return len(self.items)
@@ -59,15 +64,14 @@ class Wishlist:
         return self.items[position]
 
 
-d_last = datetime(year=2018, month=1, day=1, hour=19)
 
 d_now = datetime.now()
 delta = d_now - d_last
 seconds = float(delta.total_seconds())
 minutes = seconds / 60.0
 
-package_price = 6.5
-package_amount = 22.0
+package_price = 6.2
+package_amount = 20.0
 price_per_cigarette = package_price / package_amount
 cigarettes_per_day = 16.0
 cigarettes_per_hour = cigarettes_per_day / 24
