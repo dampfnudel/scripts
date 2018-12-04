@@ -29,7 +29,7 @@ def group_by_ticket(commits):
         print(k)
         for l in v:
             print(l)
-        print('\n')
+        print('')
 
 
 @click.group()
