@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+#
+# write the ticketid from the git branch to the first line of a COMMIT_MSG
+import sys
+import subprocess
+
+
+# Collect the parameters
+commit_msg_filepath = sys.argv[1]
+if len(sys.argv) > 2:
+    commit_type = sys.argv[2]
+else:
+    commit_type = ''
+if len(sys.argv) > 3:
+    commit_hash = sys.argv[3]
+else:
+    commit_hash = ''
+
+ticket_subprocess = subprocess.run('git branch | grep "*" | sed "s/* //" | grep -o "[A-Z]*\-[0-9]\{1,4\}"', shell=True, check=True, universal_newlines = True, stdout = subprocess.PIPE)
+if ticket_subprocess.returncode == 0:
+    ticket = ticket_subprocess.stdout
+
+    with open(commit_msg_filepath, 'r') as original:
+        data = original.read()
+    with open(commit_msg_filepath, 'w') as modified:
+        modified.write(ticket + data)
