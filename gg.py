@@ -11,14 +11,14 @@ from subprocess import Popen, PIPE
 
 
 def group_by_ticket(commits):
-    regex = '^[a-z, A-Z]+-[0-9]+'
+    regex = '[a-z, A-Z]+-[0-9]+'
     result = {'no-ticket': []}
     for commit in commits.splitlines():
         # print(commit)
         m = re.search(regex, commit)
         if m:
             ticket = m.group().strip()
-            if m not in result:
+            if ticket not in result:
                 result[ticket] = []
             c = commit[len(m[0]):]
             result[ticket].append(c.strip())
@@ -58,7 +58,8 @@ def today(context, option_1):
 @click.option("--option-1", help="option for subcommand 1")
 @click.pass_context
 def week(context, option_1):
-    print('week')
+    output = subprocess.run('git log --branches --remotes --tags --oneline --pretty=format:"%Cgreen%cd%Creset - %s%Creset" --abbrev-commit --date=local --date=format:"%d.%m-%Y %H:%M %a" --after="$(date -v Sun)"', shell=True, check=True, universal_newlines = True, stdout = subprocess.PIPE)
+    group_by_ticket(output.stdout)
 
 
 if __name__ == "__main__":
